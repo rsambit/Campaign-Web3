@@ -7,9 +7,10 @@ A modern Web3-enabled Next.js application with wallet connection functionality u
 - 🔗 **Modern Web3 Integration**: Built with Wagmi v1 and Viem for type-safe blockchain interactions
 - 🌈 **RainbowKit**: Beautiful, customizable wallet connection modal with support for multiple wallets
 - 🦄 **Multi-Wallet Support**: MetaMask, WalletConnect, Coinbase Wallet, and more
-- ⚡ **Fast & Responsive**: Built with Next.js 14 and Tailwind CSS
+- ⚡ **Next.js 14 App Router**: Modern file-system based routing with layouts and loading states
+- 🎨 **Beautiful UI**: Modern design with Tailwind CSS and responsive layouts
 - 🔒 **Type Safety**: Full TypeScript support throughout the application
-- 🎨 **Beautiful UI**: Modern design with Tailwind CSS
+- 🚀 **Server Components**: Optimized rendering with React Server Components
 
 ## Supported Wallets
 
@@ -76,13 +77,20 @@ npm run start
 ```
 frontend/
 ├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── campaigns/         # Campaigns routes
+│   │   │   ├── layout.tsx     # Campaigns layout
+│   │   │   └── page.tsx       # Campaigns page
+│   │   ├── globals-error.tsx  # Global error boundary
+│   │   ├── layout.tsx         # Root layout (replaces _app.tsx)
+│   │   ├── loading.tsx        # Global loading UI
+│   │   ├── not-found.tsx      # 404 page
+│   │   ├── page.tsx           # Home page (replaces pages/index.tsx)
+│   │   └── providers.tsx      # Client-side providers
 │   ├── components/
-│   │   └── Header.tsx          # Header with wallet connect button
+│   │   └── Header.tsx         # Header with navigation & wallet connect
 │   ├── config/
-│   │   └── wagmi.ts           # Web3 configuration
-│   ├── pages/
-│   │   ├── _app.tsx           # App wrapper with providers
-│   │   └── index.tsx          # Home page
+│   │   └── wagmi.ts          # Web3 configuration
 │   └── styles/
 │       └── globals.css        # Global styles
 ├── package.json
@@ -93,9 +101,16 @@ frontend/
 
 ## Key Components
 
+### App Router Structure
+- **Root Layout**: `src/app/layout.tsx` - Defines the HTML structure and global providers
+- **Providers**: `src/app/providers.tsx` - Client-side Web3 and query providers
+- **Home Page**: `src/app/page.tsx` - Main landing page with wallet connection
+- **Campaigns**: `src/app/campaigns/` - Nested route with its own layout
+
 ### Header Component
 - **Location**: `src/components/Header.tsx`
 - **Features**: 
+  - Navigation between pages
   - Connect/Disconnect wallet functionality
   - Display connected wallet address in readable format
   - Network switching capability
@@ -108,9 +123,19 @@ frontend/
   - Multiple RPC providers
   - Auto-connection on page load
 
+## App Router Benefits
+
+- **File-system based routing**: Routes are defined by folder structure
+- **Nested layouts**: Share UI between routes while preserving state
+- **Loading states**: Built-in loading.tsx for better UX
+- **Error boundaries**: Automatic error handling with error.tsx files
+- **Server Components**: Better performance with server-side rendering
+- **Streaming**: Progressive page rendering
+
 ## Technologies Used
 
-- **Frontend Framework**: Next.js 14
+- **Frontend Framework**: Next.js 14 with App Router
+- **Routing**: File-system based routing with nested layouts
 - **Web3 Libraries**: 
   - Wagmi v1 (React hooks for Ethereum)
   - Viem (TypeScript interface for Ethereum)
@@ -118,6 +143,7 @@ frontend/
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript
 - **State Management**: TanStack Query (React Query)
+- **Architecture**: React Server Components + Client Components
 
 ## Customization
 

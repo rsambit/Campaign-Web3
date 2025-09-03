@@ -1,18 +1,45 @@
 'use client'
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Header: React.FC = () => {
+  const pathname = usePathname();
+
+  const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'Campaigns', href: '/campaign-list' },
+  ];
+
   return (
     <header className="w-full bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Logo/Brand */}
-          <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-900">
+          <div className="flex items-center space-x-8">
+            <Link href="/" className="text-xl font-bold text-gray-900 hover:text-primary-600 transition-colors">
               Campaign Web3
-            </h1>
+            </Link>
+            
+            {/* Navigation Links */}
+            <nav className="hidden md:flex space-x-6">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  prefetch={true}
+                  className={`text-sm font-medium transition-colors ${
+                    pathname === item.href
+                      ? 'text-primary-600 border-b-2 border-primary-600 pb-1'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
           </div>
 
           {/* Connect Wallet Button */}
