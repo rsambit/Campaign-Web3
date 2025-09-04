@@ -11,6 +11,8 @@ const query = gql`{
     campaignAddress
     owner
     description
+    deadline
+    target
   }
 }`
 

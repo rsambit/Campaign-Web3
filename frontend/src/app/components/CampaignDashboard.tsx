@@ -16,13 +16,12 @@ interface IContributor {
     address: string;
 }
 
-export function CampaignDashboard({ address }: {address: string}) {
+export function CampaignDashboard({ campaignAddress }: {campaignAddress: string}) {
 
 
     const { address: userAddress, chainId } = useAccount({
         config: config
     });
-    const campaignAddress = address;
     
     const { data: campaignDetails, isLoading: campaignDetailsLoading } = useReadContract({
         address: campaignAddress as `0x${string}`,

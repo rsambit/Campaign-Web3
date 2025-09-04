@@ -2,16 +2,22 @@
 
 import { useAccount, useReadContract } from "wagmi"
 import { Card } from "./Card";
-import { DetailsList, IColumn, Pivot, ShimmeredDetailsList, ThemeProvider, PivotItem } from "@fluentui/react";
+import { DetailsList, IColumn, Pivot, ShimmeredDetailsList, ThemeProvider, PivotItem, Stack, PrimaryButton, DefaultButton } from "@fluentui/react";
 // import { darkTheme } from "./AppHeader";
 import { campaignFactoryAbi, networkMappings } from "../helpers/networkMappingHelper";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getAllCampaigns } from "../data/graphDataHelpers";
+import { TitleDescriptionCardCompact } from "./TitleAndDescriptionCompact";
+import { CampaignStatus } from "../constants/constants";
+import { useRouter } from "next/navigation";
 
 interface ICampaign {
     campaignAddress: string;
     owner: string;
+    description: string;
+    deadline: Date;
+    target: BigInt;
 }
 
 export const CampaignList = () => {
@@ -21,46 +27,30 @@ export const CampaignList = () => {
     const [isCampaignListLoading, setIsCampaignListLoading] = useState(false);
 
     const { chainId, address } = useAccount();
+    const router = useRouter();
     const campaignFactoryAddress = chainId ? networkMappings[chainId!]?.campaignFactoryAddress : null;
 
-    // const { data: campaignAddresses, isLoading: isCampaignListLoading } = useReadContract({
-    //     abi: campaignFactoryAbi,
-    //     address: campaignFactoryAddress,
-    //     functionName: "getAllCampaigns"
-    // });
-
-    // const { data: ownedCampaignAddresses, isLoading: isOwnedCampaignsLoading } = useReadContract({
-    //     abi: campaignFactoryAbi,
-    //     address: campaignFactoryAddress,
-    //     functionName: "getAllCampaignsForUser",
-    //     args: [address]
-    // });
-
-    // useEffect(() => {
-    //     if (campaignAddresses) {
-    //         setCampaigns((campaignAddresses as string[]).map((v) => {
-    //             return { address: v };
-    //         }));
-    //     }
-
-    //     if (ownedCampaignAddresses) {
-    //         setOwnedCampaigns((ownedCampaignAddresses as string[]).map((v) => {
-    //             return { address: v };
-    //         }));
-    //     }
-
-    // }, [campaignAddresses, ownedCampaignAddresses]);
+    const fetchCampaigns = async () => {
+        setIsCampaignListLoading(true);
+        const data = await getAllCampaigns();
+        setCampaigns(data as ICampaign[]);
+        setOwnedCampaigns((data as ICampaign[]).filter((c) => c.owner.toLowerCase() === address?.toLowerCase()));
+        setIsCampaignListLoading(false);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsCampaignListLoading(true);
-            const data = await getAllCampaigns();
-            setCampaigns(data as ICampaign[]);
-            setOwnedCampaigns((data as ICampaign[]).filter((c) => c.owner.toLowerCase() === address?.toLowerCase()));
-            setIsCampaignListLoading(false);
-        };
-        fetchData();
+        fetchCampaigns();
     }, []);
+
+    const handleRefresh = () => {
+        fetchCampaigns();
+    };
+
+    const handleCreateCampaign = () => {
+        // Navigate to create campaign page or show create campaign modal
+        // For now, we'll navigate to a create campaign route
+        router.push('/createnew');
+    };
 
     if (!chainId) {
         return (
@@ -95,7 +85,37 @@ export const CampaignList = () => {
                     <span>{"Create a new campaign or monitor your previous campaigns. All in a single place using decentralized wallets."}</span>
                 </Card>
             </div>
-            <Pivot>
+
+            {/* Action Buttons */}
+            <div style={{ marginBottom: 20 }}>
+                <Stack horizontal tokens={{ childrenGap: 12 }}>
+                    <PrimaryButton
+                        text="Add New Campaign"
+                        iconProps={{ iconName: 'Add' }}
+                        onClick={handleCreateCampaign}
+                        disabled={!chainId || !address}
+                        styles={{
+                            root: {
+                                backgroundColor: '#0078d4',
+                                borderColor: '#0078d4',
+                            }
+                        }}
+                    />
+                    <DefaultButton
+                        text="Refresh"
+                        iconProps={{ iconName: 'Refresh' }}
+                        onClick={handleRefresh}
+                        disabled={isCampaignListLoading}
+                        styles={{
+                            root: {
+                                borderColor: '#0078d4',
+                                color: '#0078d4'
+                            }
+                        }}
+                    />
+                </Stack>
+            </div>
+            {<></>/* <Pivot>
                 <PivotItem
                     itemKey="yourown"
                     headerText="Your campaigns"
@@ -120,7 +140,24 @@ export const CampaignList = () => {
                         />
                     </ThemeProvider>
                 </PivotItem>
-            </Pivot>
+            </Pivot> */}
+            {
+                <Stack tokens={{ childrenGap: 20 }}>
+                    {campaigns.map((campaign) => {
+                        return (
+                            <TitleDescriptionCardCompact
+                                key={campaign.campaignAddress}
+                                title={campaign.description}
+                                description={campaign.description}
+                                owner={campaign.owner}
+                                status={CampaignStatus.Active}
+                                campaignAddress={campaign.campaignAddress as string}
+                                userAddress={address as string}
+                            />
+                        );
+                    })}
+                </Stack>
+            }
             
         </div>
     )

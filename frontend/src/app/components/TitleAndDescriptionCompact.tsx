@@ -2,13 +2,15 @@
 import React from 'react';
 import { CampaignStatus } from '../constants/constants';
 import { getAddressFormattedText } from '../helpers/UIHelpers';
+import { useRouter } from 'next/navigation';
 
 interface TitleDescriptionCardCompactProps {
     title: string;
     description: string;
     owner: string;
     status: CampaignStatus;
-    currentAddress: string;
+    campaignAddress: string;
+    userAddress: string;
 }
 
 const getStatusColor = (status: CampaignStatus): string => {
@@ -46,14 +48,23 @@ export const TitleDescriptionCardCompact: React.FC<TitleDescriptionCardCompactPr
     description, 
     owner, 
     status, 
-    currentAddress 
+    campaignAddress,
+    userAddress 
 }) => {
     const statusColorClass = getStatusColor(status);
     const statusText = getStatusText(status);
-    const isOwnedByUser = owner === currentAddress;
+    const isOwnedByUser = owner === userAddress;
+
+    const router = useRouter();
 
     return (
-        <div className={`bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border-l-4 ${statusColorClass}`}>
+        <div
+            className={`bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 border-l-4 ${statusColorClass}`}
+            onClick={(ev) => {
+                ev.stopPropagation();
+                router.push(`/campaigns/${campaignAddress}`);
+            }}
+        >
             <div className="p-5">
                 {/* Header with title and status */}
                 <div className="flex justify-between items-start mb-3">

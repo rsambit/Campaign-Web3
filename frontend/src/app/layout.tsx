@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
 import Header from '@/app/components/Header';
+import { ToastContainer } from 'react-toastify';
 
 import '@rainbow-me/rainbowkit/styles.css';
+import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -31,6 +33,17 @@ export default function RootLayout({
               {children}
             </main>
           </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </Providers>
       </body>
     </html>

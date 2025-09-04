@@ -381,5 +381,9 @@ export const networkMappings: Record<number, any> = {
     [31337]: {
         campaignFactoryAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         campaignTestAddress: ""
+    },
+    [11155111]: {
+        campaignFactoryAddress: "0x7c844159E116EE4c1a423A181AcAe23430625487",
+        campaignTestAddress: ""
     }
 }

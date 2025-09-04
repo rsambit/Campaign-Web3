@@ -9,7 +9,7 @@ export default function Campaign({ params }: CampaignProps) {
 
     return (
         <>  
-            <CampaignDashboard address={address} />
+            <CampaignDashboard campaignAddress={address} />
         </>
     );
 }
